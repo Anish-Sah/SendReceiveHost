@@ -103,7 +103,10 @@ public class MainActivity extends AppCompatActivity {
                 // Intent to start an activity called SecondActivity with the following code:
                 Intent intent = new Intent(MainActivity.this, MainActivity2.class);
 
-                intent.putExtra("Distribution_content", temp);
+                //Sending the distribution content to the second activity.
+//                intent.putExtra("Distribution_content", temp);
+
+
                 // start the activity connect to the specified class
                 startActivity(intent);
             }
@@ -198,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
                 os = new PrintWriter(socket.getOutputStream(), true);
 
 
-//                //reading file from assests folder
+//                //reading file from assets folder
 //                try {
 //                    InputStream inst = getAssets().open("index.html");
 //                    int size = inst.available();
@@ -241,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void writeFile() {
 
-        //First reading from the assests folder--later reading would be from database.
+        //First reading from the assets folder--later reading would be from database.
         try {
             InputStream inst = getAssets().open("index.html");
             int size = inst.available();
@@ -253,7 +256,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        //Storing the file from assest  into app-specific storage folder.
+        //Storing the file from asset  into app-specific storage folder.
         try {
             FileOutputStream fileOutputStream = openFileOutput("index.html", MODE_PRIVATE);
             fileOutputStream.write(temp.getBytes());
