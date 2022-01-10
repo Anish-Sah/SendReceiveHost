@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                writeFile();
+                writeFile();                    //for secondary distributor comment out this line
                 readFile();
 
                 String ipaddress = (getIpAddress() + ":" + HttpServerThread.HttpServerPORT + "\n");
@@ -212,8 +212,6 @@ public class MainActivity extends AppCompatActivity {
 //                } catch (IOException e) {
 //                    e.printStackTrace();
 //                }
-
-
 
                 os.print("HTTP/1.0 200" + "\r\n");
                 os.print("Content type: text/html" + "\r\n");

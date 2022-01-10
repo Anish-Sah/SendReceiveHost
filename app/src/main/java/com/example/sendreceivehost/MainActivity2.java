@@ -20,6 +20,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
@@ -49,8 +50,8 @@ public class MainActivity2 extends AppCompatActivity {
         disMsg = findViewById(R.id.disMsg);
         back_btn = (Button)findViewById(R.id.back_button);
 
-        //Reading file from the app-specific storage for distribution
-        read();
+        Thread myThread = new Thread(new MyServer());
+        myThread.start();
 
         back_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,7 +64,7 @@ public class MainActivity2 extends AppCompatActivity {
                 // start the activity connect to the specified class
                 startActivity(intent);
                 finish();
-
+//                myThread.interrupt();
             }
         });
 
@@ -86,10 +87,6 @@ public class MainActivity2 extends AppCompatActivity {
 //            System.out.println(e.toString());
 //        }
 
-        Thread myThread = new Thread(new MyServer());
-        myThread.start();
-
-//        myThread.interrupt();
     }
 
     private String getLocalIpAddress2() throws UnknownHostException {
@@ -128,6 +125,18 @@ public class MainActivity2 extends AppCompatActivity {
                     //This message stores the information from the peer -- to be stored in app-specific storage.
                     message = dis.readUTF();
 
+                    //storing message into app-specific storage.
+                    try {
+                        FileOutputStream fileOutputStream = openFileOutput("index.html", MODE_PRIVATE);
+                        fileOutputStream.write(message.getBytes());
+                        fileOutputStream.close();
+
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
                     //The received is displayed for testing purpose
                     handler.post(new Runnable() {
                         @Override
@@ -136,7 +145,7 @@ public class MainActivity2 extends AppCompatActivity {
 
                         }
                     });
-                    //This received msg will be stored in app-specific storage.
+
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -146,15 +155,19 @@ public class MainActivity2 extends AppCompatActivity {
     }
 
 
-
     public void button_click(View v){
         BackgroundTask b = new BackgroundTask();
+
+        //For secondary distribution app reading file should done after send button is clicked.
+        read();
+
         b.execute(e1.getText().toString(), distributed_msg);
 
     }
 
+
     //Sending Data to peers --- the peers ip addresses would be fetched from the database
-    class BackgroundTask extends AsyncTask<String, Void, String> {
+    private class BackgroundTask extends AsyncTask<String, Void, String> {
         Socket s;
         DataOutputStream dos;
         String ip, message, error;
@@ -181,6 +194,10 @@ public class MainActivity2 extends AppCompatActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             disMsg.setText("Error: " + error +"Message is : "+message);
+//            this.cancel(true);
+//            if(isCancelled()){
+//                break;
+//            }
         }
 
 

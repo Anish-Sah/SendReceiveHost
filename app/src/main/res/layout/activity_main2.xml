@@ -12,7 +12,8 @@
         android:layout_height="wrap_content"
         android:text="Back"
         android:layout_marginTop="10dp"
-        />
+        android:onClick="back_btn_click"
+        tools:ignore="OnClick" />
 
 
     <TextView
